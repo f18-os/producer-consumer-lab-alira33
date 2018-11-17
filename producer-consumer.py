@@ -2,6 +2,7 @@ from threading import Thread, Lock
 import time
 import random
 from threading import Condition
+from ExtractFrames import *
 
 queue = []
 lock = Lock()
@@ -10,7 +11,7 @@ condition = Condition()
 
 class ProducerThread(Thread):
     def run(self):
-        nums = range(5)
+        frames = extract()
         global queue
         while True:
             condition.acquire()
@@ -18,9 +19,9 @@ class ProducerThread(Thread):
                 print ("Queue full, producer is waiting")
                 condition.wait()
                 print ("Space in queue, Consumer notified the producer")
-            num = random.choice(nums)
-            queue.append(num)
-            print ("Produced", num)
+            
+            queue.append(frames)
+            print ("Produced", frames)
             condition.notify()
             condition.release()
             time.sleep(random.random())
