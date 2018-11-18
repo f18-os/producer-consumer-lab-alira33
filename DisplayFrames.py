@@ -7,7 +7,12 @@ import time
 outputDir    = 'frames'
 frameDelay   = 42       # the answer to everything
 
-def display(frame):
+queue = []
+MAX_NUM = 20 #requirement completed: is being halved to 10
+lock = Lock()
+condition = Condition()
+
+def display():
     # initialize frame count
     count = 0
 
@@ -21,7 +26,7 @@ def display(frame):
 
     while frame is not None:
         
-        #print("Displaying frame {}".format(count))
+        print("Displaying frame {}".format(count))
         # Display the frame in a window called "Video"
         cv2.imshow("Video", frame)
 

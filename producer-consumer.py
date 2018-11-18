@@ -1,53 +1,30 @@
-from threading import Thread, Lock
-import time
-import random
-from threading import Condition
-import threading
-from ConsumerThread import * 
 from ExtractFrames import *
 from ConvertToGrayscale import *
-from DisplayFrames import *
 
-queue = []
-lock = Lock()
-MAX_NUM = 10
-condition = Condition()
 
-# class ProducerThread(Thread):
+ExtractProducerThread().start()
+ExtractConsumerThread().start()
+GrayscaleProducerThread().start()
+GrayscaleConsumerThread().start()
+# jobs = []
+
+# class ExecuteJobs():
 #     def run(self):
-#         global queue
-#         i = 0
-#         while True:
-#             condition.acquire()
-#             if len(queue) == MAX_NUM:
-#                 print ("Queue full, producer is waiting")
-#                 condition.wait()
-#                 print ("Space in queue, Consumer notified the producer")
+#     # Create a list of jobs and then iterate through
+#     # the number of processes appending each process to
+#     # the job list
+#         grayscale = multiprocessing.Process(target=GrayscaleProducerThread)
+#         jobs.append(grayscale)
+#         extract = multiprocessing.Process(target=ExtractProducerThread)
+#         jobs.append(extract)
+#         # Start the processes (i.e. calculate the random number lists)
+#     for j in jobs:
+#         j.start()
 
-#             print ("Extrating frames")
-#             frames = extract()
-#             queue.append(i)
-            
-#             condition.notify()
-#             condition.release()
-#             time.sleep(random.random())
+#         # Ensure all of the processes have finished
+#     for j in jobs:
+#         j.join()
 
+#         print ("List processing complete.")
 
-# class ConsumerThread(Thread):
-#     def run(self):
-#         global queue
-#         while True:
-#             condition.acquire()
-#             if not queue:
-#                 print ("Nothing in queue, consumer is waiting")
-#                 condition.wait()
-#                 print ("Producer added something to queue and notified the consumer")
-#             frame = queue.pop(0)
-#             #print ("Consumed", num)
-#             print ("Consumed extracting frames")
-#             condition.notify()
-#             condition.release()
-#             time.sleep(random.random())
-
-
-extract(Thread)
+# ExecuteJobs()

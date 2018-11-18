@@ -16,10 +16,10 @@ clipFileName = 'clip.mp4'
 
 queue = []
 lock = Lock()
-MAX_NUM = 20 #requirement completed: is being halved to 10
+MAX_NUM = 10 #requirement completed
 condition = Condition()
 
-class ProducerThread(Thread):
+class ExtractProducerThread(Thread):
   def run(self):
       global queue
       count = 0
@@ -47,12 +47,11 @@ class ProducerThread(Thread):
         # write the current frame out as a jpeg image
         cv2.imwrite("{}/frame_{:04d}.jpg".format(outputDir, count), image)   
         success,image = vidcap.read()
-        queue.append(image)  
         print('Reading frame {}'.format(count))
         queue.append(count)
         count += 1
 
-class ConsumerThread(Thread):
+class ExtractConsumerThread(Thread):
     def run(self):
         global queue
         while True:
@@ -66,6 +65,4 @@ class ConsumerThread(Thread):
             condition.notify()
             condition.release()
             time.sleep(random.random())
- 
-ProducerThread().start()
-ConsumerThread().start()
+
