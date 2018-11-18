@@ -16,7 +16,7 @@ clipFileName = 'clip.mp4'
 
 queue = []
 lock = Lock()
-MAX_NUM = 10
+MAX_NUM = 20 #requirement completed: is being halved to 10
 condition = Condition()
 
 class ProducerThread(Thread):
@@ -61,8 +61,7 @@ class ConsumerThread(Thread):
                 print ("Nothing in queue, consumer is waiting")
                 condition.wait()
                 print ("Producer added something to queue and notified the consumer")
-            frame = queue.pop(0)
-            #print ("Consumed", num)
+            queue.pop(0)
             print ("Consumed extracting frames")
             condition.notify()
             condition.release()
