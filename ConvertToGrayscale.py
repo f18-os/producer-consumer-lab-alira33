@@ -3,36 +3,39 @@
 import cv2
 
 # globals
-outputDir    = 'frames'
+outputDir = 'frames'
 
-# initialize frame count
-count = 0
 
-# get the next frame file name
-inFileName = "{}/frame_{:04d}.jpg".format(outputDir, count)
+def grayscale(frame):
+        # initialize frame count
+        count = 0
 
-# load the next file
-inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+        # # get the next frame file name
+        # inFileName = "{}/frame_{:04d}.jpg".format(outputDir, count)
 
-while inputFrame is not None:
-    print("Converting frame {}".format(count))
+        # # load the next file
+        # inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
 
-    # convert the image to grayscale
-    grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)
-    
-    # generate output file name
-    outFileName = "{}/grayscale_{:04d}.jpg".format(outputDir, count)
+        while frame is not None:
+            # print("Converting frame {}".format(count))
 
-    # write output file
-    cv2.imwrite(outFileName, grayscaleFrame)
+            # convert the image to grayscale
+            grayscaleFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                
+            # generate output file name
+            outFileName = "{}/grayscale_{:04d}.jpg".format(outputDir, count)
 
-    count += 1
+            # write output file
+            cv2.imwrite(outFileName, grayscaleFrame)
 
-    # generate input file name for the next frame
-    inFileName = "{}/frame_{:04d}.jpg".format(outputDir, count)
+            # count += 1
 
-    # load the next frame
-    inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+            # generate input file name for the next frame
+            inFileName = "{}/frame_{:04d}.jpg".format(outputDir, count)
+
+            # load the next frame
+            inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+      
 
     
     
