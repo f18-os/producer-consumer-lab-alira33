@@ -41,6 +41,7 @@ class ProducerThread(Thread):
         if len(queue) == MAX_NUM:
                   print ("Queue full, producer is waiting")
                   condition.wait()
+                  queue = [] #space for queue
                   print ("Space in queue, Consumer notified the producer")
 
         # write the current frame out as a jpeg image
