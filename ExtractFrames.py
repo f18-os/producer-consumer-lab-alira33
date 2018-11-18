@@ -14,14 +14,14 @@ outputDir    = 'frames'
 clipFileName = 'clip.mp4'
 # initialize frame count
 
-queue = []
+#queue = []
 lock = Lock()
 MAX_NUM = 10 #requirement completed
 condition = Condition()
 
 class ExtractProducerThread(Thread):
   def run(self):
-      global queue
+      #global queue
       count = 0
 
       condition.acquire()
@@ -38,31 +38,33 @@ class ExtractProducerThread(Thread):
 
       print("Reading frame {} {} ".format(count, success))
       while success:
-        if len(queue) == MAX_NUM:
-                  print ("Queue full, producer is waiting")
-                  condition.wait()
-                  queue = [] #space for queue
-                  print ("Space in queue, Consumer notified the producer")
+        # if len(queue) == MAX_NUM:
+        #           print ("Queue full, producer is waiting")
+        #           condition.wait()
+        #           queue = [] #space for queue
+        #           print ("Space in queue, Consumer notified the producer")
 
         # write the current frame out as a jpeg image
         cv2.imwrite("{}/frame_{:04d}.jpg".format(outputDir, count), image)   
         success,image = vidcap.read()
         print('Reading frame {}'.format(count))
-        queue.append(count)
+        #queue.append(count)
         count += 1
 
-class ExtractConsumerThread(Thread):
-    def run(self):
-        global queue
-        while True:
-            condition.acquire()
-            if not queue:
-                print ("Nothing in queue, consumer is waiting")
-                condition.wait()
-                print ("Producer added something to queue and notified the consumer")
-            queue.pop(0)
-            print ("Consumed extracting frames")
-            condition.notify()
-            condition.release()
-            time.sleep(random.random())
+# class ExtractConsumerThread(Thread):
+#     def run(self):
+#         global queue
+#         while True:
+#             condition.acquire()
+#             if not queue:
+#                 print ("Nothing in queue, consumer is waiting")
+#                 condition.wait()
+#                 print ("Producer added something to queue and notified the consumer")
+#             queue.pop(0)
+#             print ("Consumed extracting frames")
+#             condition.notify()
+#             condition.release()
+#             time.sleep(random.random())
 
+# ExtractProducerThread().start()
+# ExtractConsumerThread().start()

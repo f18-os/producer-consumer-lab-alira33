@@ -1,30 +1,51 @@
 from ExtractFrames import *
 from ConvertToGrayscale import *
 
+from threading import Thread, Condition
+import time
+import random
 
-ExtractProducerThread().start()
-ExtractConsumerThread().start()
-GrayscaleProducerThread().start()
-GrayscaleConsumerThread().start()
-# jobs = []
+queue = []
+MAX_NUM = 10
+condition = Condition()
 
-# class ExecuteJobs():
-#     def run(self):
-#     # Create a list of jobs and then iterate through
-#     # the number of processes appending each process to
-#     # the job list
-#         grayscale = multiprocessing.Process(target=GrayscaleProducerThread)
-#         jobs.append(grayscale)
-#         extract = multiprocessing.Process(target=ExtractProducerThread)
-#         jobs.append(extract)
-#         # Start the processes (i.e. calculate the random number lists)
-#     for j in jobs:
-#         j.start()
+class ProducerThread(Thread):
+    def run(self):
+        global queue
+        i = 0
+        while True:
+            condition.acquire()
+            if len(queue) == MAX_NUM:
+                print ("Queue full, producer is waiting")
+                condition.wait()
+                print ("Space in queue, Consumer notified the producer")
 
-#         # Ensure all of the processes have finished
-#     for j in jobs:
-#         j.join()
 
-#         print ("List processing complete.")
+            ExtractProducerThread().start()
+            GrayscaleProducerThread().start()
 
-# ExecuteJobs()
+            queue.append(i)
+            i = i + 1
+            condition.notify()
+            condition.release()
+            time.sleep(random.random())
+
+
+class ConsumerThread(Thread):
+    def run(self):
+        global queue
+        while True:
+            condition.acquire()
+            if not queue:
+                print ("Nothing in queue, consumer is waiting")
+                condition.wait()
+                print ("Producer added something to queue and notified the consumer")
+            num = queue.pop(0)
+            print ("Consumed", num)
+            condition.notify()
+            condition.release()
+            time.sleep(random.random())
+
+
+ProducerThread().start()
+ConsumerThread().start()
