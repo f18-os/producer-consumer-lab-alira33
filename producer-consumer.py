@@ -1,5 +1,6 @@
 from ExtractFrames import *
 from ConvertToGrayscale import *
+from DisplayFrames import *
 
 from threading import Thread, Condition
 import time
@@ -23,6 +24,7 @@ class ProducerThread(Thread):
 
             ExtractProducerThread().start()
             GrayscaleProducerThread().start()
+            DisplayProducerThread().start()
 
             queue.append(i)
             i = i + 1
@@ -40,8 +42,7 @@ class ConsumerThread(Thread):
                 print ("Nothing in queue, consumer is waiting")
                 condition.wait()
                 print ("Producer added something to queue and notified the consumer")
-            num = queue.pop(0)
-            print ("Consumed", num)
+            queue.pop(0) # removing it from queue
             condition.notify()
             condition.release()
             time.sleep(random.random())

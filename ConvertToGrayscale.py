@@ -11,9 +11,6 @@ import threading
 # globals
 outputDir    = 'frames'
 
-#queue = []
-lock = Lock()
-MAX_NUM = 10 #requirement completed: is being halved to 10
 condition = Condition()
 
 class GrayscaleProducerThread(Thread):
@@ -30,11 +27,6 @@ class GrayscaleProducerThread(Thread):
         inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
 
         while inputFrame is not None:
-            # if len(queue) == MAX_NUM:
-            #         print ("Queue full, producer is waiting")
-            #         condition.wait()
-            #         queue = []
-            #         print ("Space in queue, Consumer notified the producer")
 
             print("Converting frame {}".format(count))
 
@@ -55,17 +47,3 @@ class GrayscaleProducerThread(Thread):
 
             # load the next frame
             inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
-
-# class GrayscaleConsumerThread(Thread):
-#     def run(self):
-#         global queue
-#         while True:
-#             condition.acquire()
-#             if not queue:
-#                 print ("Nothing in queue, consumer is waiting")
-#                 condition.wait()
-#                 print ("Producer added something to queue and notified the consumer")
-#             queue.pop(0)
-#             condition.notify()
-#             condition.release()
-#             time.sleep(random.random())
