@@ -27,7 +27,7 @@ A queue is bounded at ten frames, while a;; three threads process all frames of 
 
 ## Run program
 
-        python3 producer-consumer.py
+        python3 ExtractFrames.py
 
 ### The following requirements are met:
 * Extract frames from a video file, convert them to grayscale, and display
