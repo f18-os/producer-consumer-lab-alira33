@@ -11,7 +11,7 @@ frames. The threads will run concurrently.
 ### ExtractFrames.py
 Extracts a series of frames from the video contained in 'clip.mp4' and saves 
 them as jpeg images in sequentially numbered files with the pattern
-'frame_xxxx.jpg'.
+'frame_xxxx.jpg'. Contains the main producer queue that is bounded at ten frames, while 2 more threads process frames of the video exactly once
 
 ### ConvertToGrayscale.py
 Loads a series for frams from sequentially numbered files with the pattern
@@ -21,9 +21,6 @@ images with the file names 'grayscale_xxxx.jpg'
 ### DisplayFrames.py
 Loads a series of frames sequently from files with the names
 'grayscale_xxxx.jpg' and displays them with a 42ms delay.
-
-### producer-consumer.py
-A queue is bounded at ten frames, while a;; three threads process all frames of the video exactly once
 
 ## Run program
 
