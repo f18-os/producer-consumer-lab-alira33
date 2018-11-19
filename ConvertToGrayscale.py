@@ -15,8 +15,10 @@ condition = Condition()
 
 class GrayscaleProducerThread(Thread):
     def run(self):
-        #global queue
+
+        # Condition aquired
         condition.acquire()
+        
         # initialize frame count
         count = 0
 

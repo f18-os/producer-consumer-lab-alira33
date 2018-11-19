@@ -21,11 +21,16 @@ class ProducerThread(Thread):
                 condition.wait()
                 print ("Space in queue, Consumer notified the producer")
 
-
+            # Extracting frames
             ExtractProducerThread().start()
+
+             # Converting to Grayscale
             GrayscaleProducerThread().start()
+
+             # Displaying frames
             DisplayProducerThread().start()
 
+            # Adding to queue
             queue.append(i)
             i = i + 1
             condition.notify()
@@ -42,7 +47,9 @@ class ConsumerThread(Thread):
                 print ("Nothing in queue, consumer is waiting")
                 condition.wait()
                 print ("Producer added something to queue and notified the consumer")
-            queue.pop(0) # removing it from queue
+            
+            # Removing it from queue
+            queue.pop(0)
             condition.notify()
             condition.release()
             time.sleep(random.random())

@@ -16,6 +16,8 @@ condition = Condition()
 
 class DisplayProducerThread(Thread):
     def run(self):
+
+        # Condition aquired
         condition.acquire()
 
         # initialize frame count

@@ -23,7 +23,9 @@ class ExtractProducerThread(Thread):
       #global queue
       count = 0
 
+      # Condition aquired
       condition.acquire()
+      
       # open the video clip
       vidcap = cv2.VideoCapture(clipFileName)
 
