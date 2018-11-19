@@ -7,6 +7,9 @@ import time
 import random
 from threading import Condition
 import threading
+from ConvertToGrayscale import *
+from DisplayFrames import *
+import sys
 
 queue = []
 # globals
@@ -14,18 +17,18 @@ outputDir    = 'frames'
 clipFileName = 'clip.mp4'
 # initialize frame count
 
+queue = []
 lock = Lock()
-MAX_NUM = 10 #requirement completed
+MAX_NUM = 10 #requirement completed: is being halved to 10
 condition = Condition()
 
-class ExtractProducerThread(Thread):
+class ProducerThread(Thread):
   def run(self):
-      #global queue
+      global queue
       count = 0
+      i = 0
 
-      # Condition aquired
       condition.acquire()
-      
       # open the video clip
       vidcap = cv2.VideoCapture(clipFileName)
 
@@ -39,7 +42,43 @@ class ExtractProducerThread(Thread):
 
       print("Reading frame {} {} ".format(count, success))
       while success:
+        if len(queue) == MAX_NUM:
+                  print ("Queue full, producer is waiting")
+                  condition.wait()
+                  queue = [] #space for queue
+                  print ("Space in queue, Consumer notified the producer")
+
+        # write the current frame out as a jpeg image
         cv2.imwrite("{}/frame_{:04d}.jpg".format(outputDir, count), image)   
-        success,image = vidcap.read()
         print('Reading frame {}'.format(count))
+        success,image = vidcap.read()
+        
+        #pylint: disable-msg=R0913
+        grayFrame = GrayscaleThread(Thread, image, i)
+
+        #pylint: disable-msg=R0913
+        display(Thread, grayFrame, i)
+
+        queue.append(count)
         count += 1
+        i += 1
+
+      cv2.destroyAllWindows()
+
+class ConsumerThread(Thread):
+    def run(self):
+        global queue
+        while True:
+            condition.acquire()
+            if not queue:
+                print ("Nothing in queue, consumer is waiting")
+                condition.wait()
+                print ("Producer added something to queue and notified the consumer")
+            queue.pop(0)
+            print ("Consumed extracting frames")
+            condition.notify()
+            condition.release()
+            time.sleep(random.random())
+ 
+ProducerThread().start()
+ConsumerThread().start()

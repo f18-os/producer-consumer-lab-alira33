@@ -1,63 +1,48 @@
 #!/usr/bin/env python3
 
 import cv2
-import os
-from threading import Thread, Lock
 import time
-import random
 from threading import Condition
-import threading
 
 # globals
 outputDir    = 'frames'
 frameDelay   = 42       # the answer to everything
-
 condition = Condition()
 
-class DisplayProducerThread(Thread):
-    def run(self):
+def display(self, frame, count):
+    
+    # Condition aquired
+    condition.acquire()
+    startTime = time.time()
 
-        # Condition aquired
-        condition.acquire()
+    # # Generate the filename for the first frame 
+    frameFileName = "{}/grayscale_{:04d}.jpg".format(outputDir, count)
 
-        # initialize frame count
-        count = 0
-        startTime = time.time()
+    # # load the frame
+    frame = cv2.imread(frameFileName)
+    
+    print("Displaying frame {}".format(count))
+    # Display the frame in a window called "Video"
+    cv2.imshow("Video", frame)
 
-        # Generate the filename for the first frame 
-        frameFileName = "{}/grayscale_{:04d}.jpg".format(outputDir, count)
+    # compute the amount of time that has elapsed
+    # while the frame was processed
+    elapsedTime = int((time.time() - startTime) * 1000)
+    print("Time to process frame {} ms".format(elapsedTime))
+        
+        # determine the amount of time to wait, also
+        # make sure we don't go into negative time
+    timeToWait = max(1, frameDelay - elapsedTime)
 
-        # load the frame
-        frame = cv2.imread(frameFileName)
+        # Wait for 42 ms and check if the user wants to quit
+    cv2.waitKey(timeToWait)   
 
-        while frame is not None:
-            
-            print("Displaying frame {}".format(count))
-            # Display the frame in a window called "Video"
-            cv2.imshow("Video", frame)
+        # # get the start time for processing the next frame
+    startTime = time.time()
+        
+        # # get the next frame filename
+    frameFileName = "{}/grayscale_{:04d}.jpg".format(outputDir, count)
 
-            # compute the amount of time that has elapsed
-            # while the frame was processed
-            elapsedTime = int((time.time() - startTime) * 1000)
-            print("Time to process frame {} ms".format(elapsedTime))
-            
-            # determine the amount of time to wait, also
-            # make sure we don't go into negative time
-            timeToWait = max(1, frameDelay - elapsedTime)
+        # # Read the next frame file
+    frame = cv2.imread(frameFileName)
 
-            # Wait for 42 ms and check if the user wants to quit
-            if cv2.waitKey(timeToWait) and 0xFF == ord("q"):
-                break    
-
-            # get the start time for processing the next frame
-            startTime = time.time()
-            
-            # get the next frame filename
-            count += 1
-            frameFileName = "{}/grayscale_{:04d}.jpg".format(outputDir, count)
-
-            # Read the next frame file
-            frame = cv2.imread(frameFileName)
-
-        # make sure we cleanup the windows, otherwise we might end up with a mess
-        cv2.destroyAllWindows()

@@ -1,51 +1,31 @@
 #!/usr/bin/env python3
 
 import cv2
-import os
-from threading import Thread, Lock
-import time
-import random
 from threading import Condition
-import threading
 
 # globals
-outputDir    = 'frames'
-
+outputDir = 'frames'
 condition = Condition()
 
-class GrayscaleProducerThread(Thread):
-    def run(self):
+def GrayscaleThread(self, frame, count):
 
         # Condition aquired
         condition.acquire()
-        
-        # initialize frame count
-        count = 0
 
-        # get the next frame file name
-        inFileName = "{}/frame_{:04d}.jpg".format(outputDir, count)
-
-        # load the next file
-        inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
-
-        while inputFrame is not None:
-
+        while frame is not None:
             print("Converting frame {}".format(count))
 
             # convert the image to grayscale
-            grayscaleFrame = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)
-            
+            grayscaleFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                
             # generate output file name
             outFileName = "{}/grayscale_{:04d}.jpg".format(outputDir, count)
 
             # write output file
             cv2.imwrite(outFileName, grayscaleFrame)
 
-            #queue.append(count)
-            count += 1
+            return frame
+      
 
-            # generate input file name for the next frame
-            inFileName = "{}/frame_{:04d}.jpg".format(outputDir, count)
-
-            # load the next frame
-            inputFrame = cv2.imread(inFileName, cv2.IMREAD_COLOR)
+    
+    
