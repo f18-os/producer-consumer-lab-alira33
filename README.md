@@ -1,6 +1,5 @@
 # Producer Consumer Lab
-
-For this lab you will implement a trivial producer-consumer system using
+This lab will implement a trivial producer-consumer system using
 python threads where all coordination is managed by counting and binary
 semaphores for a system of two producers and two consumers. The producers and
 consumers will form a simple rendering pipeline using multiple threads. One
@@ -23,11 +22,14 @@ images with the file names 'grayscale_xxxx.jpg'
 Loads a series of frames sequently from files with the names
 'grayscale_xxxx.jpg' and displays them with a 42ms delay.
 
-### ExtractAndDisplay.py
-Loads a series of framss from a video contained in 'clip.mp4' and displays 
-them with a 42ms delay
+### producer-consumer.py
+A queue is bounded at ten frames, while a;; three threads process all frames of the video exactly once
 
-## Requirements
+## Run program
+
+        python3 producer-consumer.py
+
+### The following requirements are met:
 * Extract frames from a video file, convert them to grayscale, and display
 them in sequence
 * You must have three functions
@@ -40,9 +42,7 @@ them in sequence
 * Threads will need to signal that they have completed their task
 * Threads must process all frames of the video exactly once
 * Frames will be communicated between threads using producer/consumer idioms
-  * Producer/consumer quesues will be bounded at ten frames
-
-Note: You may have ancillary objects and method in order to make you're code easer to understand and implement.
+  * Producer/consumer queues will be bounded at ten frames
 
 
 
